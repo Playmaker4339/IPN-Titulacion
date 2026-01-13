@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de titulación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="gestion_expedientes.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="bg-seleccion-perfil">
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="mb-3">Solicitud de registro y aprobación de la opción de titulación</h3>
+                        <hr>
+                        <form>
+                    <div class="mb-3">
+                        <label for="apellidoPat" class="form-label">Ingresa tu apellido paterno</label>
+                        <input type="text" class="form-control" id="apellidoPat" placeholder="Apellido Paterno">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="apellidoMat" class="form-label">Ingresa tu apellido materno</label>
+                        <input type="text" class="form-control" id="apellidoMat" placeholder="Apellido Materno">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Ingresa tu nombre(s)</label>
+                        <input type="text" class="form-control" id="nombre" placeholder="Nombre(s)">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="boleta" class="form-label">Ingresa tu número de boleta</label>
+                        <input type="text" class="form-control" id="boleta" placeholder="Número de Boleta">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="carrera" class="form-label">Selecciona tu carrera correspondiente</label>
+                        <select class="form-select" id="carrera">
+                            <option value="0">Técnico en construcción</option>
+                            <option value="1">Técnico en alimentos</option>
+                            <option value="2">Técnico en aeronáutica</option>
+                            </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="generacion" class="form-label">Selecciona tu generación correspondiente</label>
+                        <select class="form-select" id="generacion">
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            </select>
+                    </div>
+                    <div class="mb-3">
+                            <label for="modalidad" class="form-label">Selecciona tu modalidad de titulación</label>
+                            <select class="form-select" id="modalidad">
+                                <option value="0">Curricular</option>
+                                <option value="1">Escolaridad</option>
+                            </select>
+                        </div>
+                    <div class="mb-3">
+                        <label for="grupo" class="form-label">Ingresa el grupo al que perteneces</label>
+                        <input type="text" class="form-control" id="grupo" placeholder="Grupo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="correo" class="form-label">Ingresa tu correo electrónico</label>
+                        <input type="email" class="form-control" id="correo" placeholder="Correo Electrónico">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Ingresa tu número de teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" placeholder="Número de Teléfono">
+                    </div>
+                        <!--Espacio para rotobotón de la modalidad de titulación-->
+                    </form>
+                    <div class="text-center">
+                        <button type="button" id="btnGenerarImagen" class="btn btn-primary w-auto mb-4">Generar PDF</button>
+                    </div>
+                    <canvas id="canvasImagen" style="display:none"></canvas>
+
+                    <!-- NUEVA SECCIÓN: listado estático de solicitudes -->
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectGeneracion = document.getElementById('generacion');
+            if (!selectGeneracion) return;
+
+            const currentYear = new Date().getFullYear();
+            selectGeneracion.innerHTML = '';
+
+            // Tres años pasados, año actual y año siguiente
+            for (let offset = -3; offset <= 1; offset++) {
+                const year = currentYear + offset;
+                const option = document.createElement('option');
+                option.value = String(year);
+                option.textContent = String(year);
+                selectGeneracion.appendChild(option);
+            }
+        });
+    </script>
+
+    <!-- Quitamos este bloque para no duplicar la inserción -->
+    <!--
+    <script>
+    document.getElementById('btnGenerarImagen').addEventListener('click', async () => {
+        const payload = {
+            apellidoPat: document.getElementById('apellidoPat').value,
+            apellidoMat: document.getElementById('apellidoMat').value,
+            nombre:      document.getElementById('nombre').value,
+            boleta:      document.getElementById('boleta').value,
+            carrera:     document.getElementById('carrera').value,
+            generacion:  document.getElementById('generacion').value,
+            modalidad:   document.getElementById('modalidad').value,
+            grupo:       document.getElementById('grupo').value,
+            correo:      document.getElementById('correo').value,
+            telefono:    document.getElementById('telefono').value
+        };
+
+        try {
+            const res = await fetch('/guardar-solicitud', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!res.ok) {
+                console.error('Error guardando en la base de datos', res.status, res.statusText);
+            } else {
+                const data = await res.json();
+                console.log('Solicitud guardada:', data);
+            }
+        } catch (err) {
+            console.error('Error de red al guardar en la base de datos', err);
+        }
+    });
+    </script>
+    -->
+</body>
+</html>

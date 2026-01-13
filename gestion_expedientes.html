@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de expedientes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="gestion_expedientes.css">
+</head>
+<body class="bg-seleccion-perfil">
+    <div class="app">
+        <div class="card">
+            <h1 class="app-title">Gestión de expedientes</h1>
+            <div class="search-bar">
+                <button type="button" class="icon-button" id="btnBack">&#8592;</button>
+                <input
+                    id="searchInput"
+                    type="text"
+                    placeholder="Ingrese el número de boleta del alumno"
+                    autocomplete="off"
+                />
+                <button type="button" class="icon-button" id="btnClear">&#10005;</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div id="results" class="results">
+                <!-- Resultados renderizados por JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('searchInput');
+        const resultsEl = document.getElementById('results');
+        const btnClear = document.getElementById('btnClear');
+        const btnBack = document.getElementById('btnBack');
+
+        function renderResults(lista) {
+            if (!lista.length) {
+                resultsEl.innerHTML = '<div class="empty">Sin resultados</div>';
+                return;
+            }
+
+            resultsEl.innerHTML = lista.map(alumno => {
+                const inicial = alumno.nombre.trim().charAt(0).toUpperCase() || '?';
+                return `
+                    <div class="result-item" data-matricula="${alumno.matricula}">
+                        <div class="avatar">${inicial}</div>
+                        <div class="result-text">
+                            <div class="matricula">${alumno.matricula}</div>
+                            <div class="nombre">${alumno.nombre}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function filtrar() {
+            const q = input.value.trim();
+            try {
+                const res = await fetch('/api/alumnos?query=' + encodeURIComponent(q));
+                if (!res.ok) throw new Error('Error en la consulta');
+                const datos = await res.json(); // Debe ser un arreglo [{ matricula, nombre }, ...]
+                renderResults(datos);
+            } catch (err) {
+                console.error(err);
+                resultsEl.innerHTML = '<div class="empty">Error al cargar resultados</div>';
+            }
+        }
+
+        input.addEventListener('input', () => {
+            filtrar();
+        });
+
+        // Delegación de eventos: al hacer clic en un resultado, ir a datos_alumno.html
+        resultsEl.addEventListener('click', (event) => {
+            const item = event.target.closest('.result-item');
+            if (!item) return;
+
+            const matricula = item.dataset.matricula;
+            if (!matricula) return;
+
+            // Pasar la boleta en la URL para que datos_alumno.html pueda consultar a la API
+            window.location.href = 'datos_alumno.html?boleta=' + encodeURIComponent(matricula);
+        });
+
+        btnClear.addEventListener('click', () => {
+            input.value = '';
+            input.focus();
+            filtrar(); // vuelve a consultar (por ejemplo, todos los registros)
+        });
+
+        btnBack.addEventListener('click', () => {
+            // Ajusta según tu flujo de navegación
+            if (window.history.length > 1) {
+                window.history.back();
+            }
+        });
+
+        // Inicializar consultando la API con query vacía
+        filtrar();
+    </script>
+</body>
+</html>

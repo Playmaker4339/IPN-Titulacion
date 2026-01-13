@@ -1,0 +1,243 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+    background-color: #f6f1fb;
+    color: #3b3448;
+}
+
+.app {
+    max-width: 720px;
+    margin: 40px auto;
+    padding: 0 16px 40px;
+}
+
+.app-title {
+    text-align: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.card {
+    background-color: #efeaf7;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+    padding: 0 24px 24px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 56px;
+}
+
+.search-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.98rem;
+    color: #3b3448;
+}
+
+.search-bar input::placeholder {
+    color: #8c819f;
+}
+
+.icon-button {
+    border: none;
+    background: none;
+    color: #7c738d;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.icon-button:hover {
+    color: #4f4565;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #d5cbe7;
+    margin: 0 -24px 0 -24px;
+}
+
+.results {
+    margin-top: 8px;
+}
+
+.result-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #e1d7f0;
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0d4ff;
+    color: #6b4fb3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-right: 16px;
+}
+
+.result-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.matricula {
+    font-weight: 700;
+    font-size: 0.98rem;
+    margin-bottom: 2px;
+}
+
+.nombre {
+    font-size: 0.86rem;
+    color: #6c627f;
+}
+
+.empty {
+    padding: 16px 0;
+    font-size: 0.9rem;
+    color: #8c819f;
+}
+
+/* Layout centrado reutilizable */
+.page-centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+/* Contenedor principal para fichas/detalle de alumno */
+.student-container {
+    width: 100%;
+    max-width: 880px;
+    background-color: #fdfbff;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    padding: 32px 40px 28px;
+}
+
+.student-title {
+    text-align: center;
+    font-size: 2.3rem;
+    font-weight: 700;
+    margin-bottom: 28px;
+    color: #3b3448;
+}
+
+.student-form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+    row-gap: 22px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.96rem;
+}
+
+.form-field label {
+    color: #3b3448;
+}
+
+.form-field input {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #e0d5f0;
+    background-color: #ffffff;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.form-field input[readonly] {
+    background-color: #f6f1fb;
+    cursor: default;
+}
+
+.form-field input:focus {
+    border-color: #b38adf;
+    box-shadow: 0 0 0 2px rgba(179, 138, 223, 0.2);
+}
+
+.student-actions {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    margin-top: 36px;
+}
+
+/* Botón principal reutilizable */
+.btn-main {
+    min-width: 160px;
+    padding: 12px 24px;
+    border-radius: 3px;
+    border: none;
+    background-color: #5b1133;
+    color: #ffffff;
+    font-size: 0.98rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.18s ease, transform 0.1s ease;
+}
+
+.btn-main:hover {
+    background-color: #4a0d29;
+    transform: translateY(-1px);
+}
+
+.btn-main:active {
+    transform: translateY(0);
+}
+
+/* Fondo con imagen a pantalla completa reutilizable */
+.bg-seleccion-perfil {
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+@media (max-width: 720px) {
+    .student-container {
+        margin: 24px;
+        padding-inline: 24px;
+    }
+
+    .student-form {
+        grid-template-columns: 1fr;
+    }
+
+    .student-actions {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .btn-main {
+        width: 100%;
+    }
+}

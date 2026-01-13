@@ -1,0 +1,64 @@
+/* Fondo y tipografía similares al resto del sistema */
+body.d-flex.vh-100.align-items-center.justify-content-center {
+    background-color: #f6f1fb;
+    color: #3b3448;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Tarjeta de login similar a los formularios */
+.card.menu-admin-card {
+    width: 100%;
+    max-width: 420px;
+    background-color: #fdfbff;
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    padding: 28px 32px 24px;
+}
+
+.card.menu-admin-card .card-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #3b3448;
+}
+
+/* Campos de formulario con borde suave */
+.menu-admin-card .form-label {
+    font-weight: 500;
+    color: #3b3448;
+}
+
+.menu-admin-card .form-control {
+    border-radius: 6px;
+    border: 1px solid #e0d5f0;
+    font-size: 0.95rem;
+}
+
+.menu-admin-card .form-control:focus {
+    border-color: #b38adf;
+    box-shadow: 0 0 0 2px rgba(179, 138, 223, 0.2);
+}
+
+/* Botón principal con color vino, igual que en otros formularios */
+.menu-admin-card .btn-primary {
+    background-color: #5b1133;
+    border-color: #5b1133;
+    font-weight: 500;
+}
+
+.menu-admin-card .btn-primary:hover {
+    background-color: #4a0d29;
+    border-color: #4a0d29;
+}
+
+.menu-admin-card .btn-primary:active {
+    background-color: #4a0d29;
+    border-color: #4a0d29;
+}
+
+@media (max-width: 720px) {
+    .card.menu-admin-card {
+        margin: 24px;
+        padding-inline: 24px;
+    }
+}

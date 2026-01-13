@@ -1,0 +1,18 @@
+{
+  "name": "pruebas_visual",
+  "version": "1.0.0",
+  "description": "Proyecto para generar PDF y guardar datos en SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.1",
+    "mssql": "^12.2.0",
+    "mysql2": "^3.16.0",
+    "sqlite3": "^5.1.7"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

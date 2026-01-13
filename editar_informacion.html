@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar información</title>
+    <link rel="stylesheet" href="gestion_expedientes.css" />
+</head>
+<body class="page-centered bg-seleccion-perfil">
+    <main class="student-container">
+        <h1 class="student-title">Editar información</h1>
+
+        <form id="editarForm" class="student-form" aria-label="Editar información del alumno">
+            <div class="form-field">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" />
+            </div>
+
+            <div class="form-field">
+                <label for="boleta">Número de boleta</label>
+                <input type="text" id="boleta" name="boleta" />
+            </div>
+
+            <div class="form-field">
+                <label for="apellidoPaterno">Apellido Paterno</label>
+                <input type="text" id="apellidoPaterno" name="apellidoPaterno" />
+            </div>
+
+            <div class="form-field">
+                <label for="programa">Programa institucional</label>
+                <input type="text" id="programa" name="programa" />
+            </div>
+
+            <div class="form-field">
+                <label for="apellidoMaterno">Apellido Materno</label>
+                <input type="text" id="apellidoMaterno" name="apellidoMaterno" />
+            </div>
+
+            <div class="form-field">
+                <label for="anioIngreso">Año de ingreso al programa</label>
+                <input type="text" id="anioIngreso" name="anioIngreso" />
+            </div>
+
+            <div class="form-field">
+                <label for="modalidad">Modalidad de titulación</label>
+                <input type="text" id="modalidad" name="modalidad" />
+            </div>
+
+            <div class="form-field">
+                <label for="estatus">Estatus</label>
+                <input type="text" id="estatus" name="estatus" />
+            </div>
+        </form>
+
+        <div class="student-actions">
+            <button id="btnGuardar" class="btn-main" type="button">Guardar</button>
+            <button id="btnCancelar" class="btn-main" type="button">Cancelar</button>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const boletaParam = params.get('boleta');
+            let boletaOriginal = boletaParam;
+
+            if (!boletaParam) {
+                console.warn('No se recibió número de boleta en la URL para edición');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/alumnos/' + encodeURIComponent(boletaParam));
+                if (!res.ok) {
+                    console.error('Error al obtener datos del alumno para edición:', res.statusText);
+                    return;
+                }
+
+                const alumno = await res.json();
+
+                document.getElementById('nombre').value = alumno.nombre || '';
+                document.getElementById('boleta').value = alumno.boleta || '';
+                document.getElementById('apellidoPaterno').value = alumno.apellidoPaterno || '';
+                document.getElementById('apellidoMaterno').value = alumno.apellidoMaterno || '';
+                document.getElementById('programa').value = alumno.programa || '';
+                document.getElementById('anioIngreso').value = alumno.anioIngreso || '';
+                document.getElementById('modalidad').value = alumno.modalidad || '';
+                document.getElementById('estatus').value = alumno.estatus || '';
+
+                boletaOriginal = alumno.boleta || boletaParam;
+
+                const btnCancelar = document.getElementById('btnCancelar');
+                if (btnCancelar) {
+                    btnCancelar.addEventListener('click', () => {
+                        const boletaActual = document.getElementById('boleta').value || boletaOriginal;
+                        window.location.href = 'datos_alumno.html?boleta=' + encodeURIComponent(boletaActual);
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error al cargar los datos del alumno para edición:', error);
+            }
+
+            const btnGuardar = document.getElementById('btnGuardar');
+            if (btnGuardar) {
+                btnGuardar.addEventListener('click', async () => {
+                    const datosEditados = {
+                        boleta: document.getElementById('boleta').value,
+                        nombre: document.getElementById('nombre').value,
+                        apellidoPaterno: document.getElementById('apellidoPaterno').value,
+                        apellidoMaterno: document.getElementById('apellidoMaterno').value,
+                        programa: document.getElementById('programa').value,
+                        anioIngreso: document.getElementById('anioIngreso').value,
+                        modalidad: document.getElementById('modalidad').value,
+                        estatus: document.getElementById('estatus').value
+                    };
+
+                    try {
+                        const res = await fetch('/api/alumnos/' + encodeURIComponent(boletaOriginal), {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(datosEditados)
+                        });
+
+                        if (!res.ok) {
+                            const text = await res.text();
+                            console.error('Error al actualizar alumno:', res.status, text);
+                            alert('Error al guardar los cambios en el servidor.');
+                            return;
+                        }
+
+                        const respuesta = await res.json();
+                        const boletaFinal = respuesta.boleta || datosEditados.boleta || boletaOriginal;
+
+                        alert('Datos actualizados correctamente.');
+                        window.location.href = 'datos_alumno.html?boleta=' + encodeURIComponent(boletaFinal);
+                    } catch (error) {
+                        console.error('Error en la solicitud de actualización:', error);
+                        alert('No se pudo conectar con el servidor para guardar los cambios.');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

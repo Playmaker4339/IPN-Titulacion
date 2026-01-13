@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Datos del alumno</title>
+    <link rel="stylesheet" href="gestion_expedientes.css" />
+</head>
+<body class="page-centered bg-seleccion-perfil">
+    <main class="student-container">
+        <h1 class="student-title">Datos del alumno</h1>
+
+        <section class="student-form" aria-label="Datos del alumno">
+            <div class="form-field">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" readonly />
+            </div>
+
+            <div class="form-field">
+                <label for="boleta">Número de boleta</label>
+                <input type="text" id="boleta" name="boleta" readonly />
+            </div>
+
+            <div class="form-field">
+                <label for="apellidoPaterno">Apellido Paterno</label>
+                <input type="text" id="apellidoPaterno" name="apellidoPaterno" readonly />
+            </div>
+
+            <div class="form-field">
+                <label for="programa">Programa institucional</label>
+                <input type="text" id="programa" name="programa" readonly />
+            </div>
+
+            <div class="form-field">
+                <label for="apellidoMaterno">Apellido Materno</label>
+                <input type="text" id="apellidoMaterno" name="apellidoMaterno" readonly />
+            </div>
+
+            <div class="form-field">
+                <label for="anioIngreso">Año de ingreso al programa</label>
+                <input type="text" id="anioIngreso" name="anioIngreso" readonly />
+            </div>
+
+            <div class="form-field">
+                <label for="modalidad">Modalidad de titulación</label>
+                <input type="text" id="modalidad" name="modalidad" readonly />
+            </div>
+
+            <div class="form-field">
+                <label for="estatus">Estatus</label>
+                <input type="text" id="estatus" name="estatus" readonly />
+            </div>
+        </section>
+
+        <div class="student-actions">
+            <button id="btnEditar" class="btn-main" type="button">Editar</button>
+            <button id="btnVolver" class="btn-main" type="button">Volver</button>
+        </div>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const boletaParam = params.get('boleta');
+
+            if (!boletaParam) {
+                console.warn('No se recibió número de boleta en la URL');
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/alumnos/' + encodeURIComponent(boletaParam));
+                if (!res.ok) {
+                    console.error('Error al obtener datos del alumno:', res.statusText);
+                    return;
+                }
+
+                const alumno = await res.json();
+
+                document.getElementById('nombre').value = alumno.nombre || '';
+                document.getElementById('boleta').value = alumno.boleta || '';
+                document.getElementById('apellidoPaterno').value = alumno.apellidoPaterno || '';
+                document.getElementById('apellidoMaterno').value = alumno.apellidoMaterno || '';
+                document.getElementById('programa').value = alumno.programa || '';
+                document.getElementById('anioIngreso').value = alumno.anioIngreso || '';
+                document.getElementById('modalidad').value = alumno.modalidad || '';
+                document.getElementById('estatus').value = alumno.estatus || '';
+
+                const btnEditar = document.getElementById('btnEditar');
+                if (btnEditar) {
+                    btnEditar.addEventListener('click', () => {
+                        const boletaActual = document.getElementById('boleta').value || boletaParam;
+                        if (!boletaActual) {
+                            alert('No se encontró número de boleta para editar.');
+                            return;
+                        }
+                        window.location.href = 'editar_informacion.html?boleta=' + encodeURIComponent(boletaActual);
+                    });
+                }
+
+                const btnVolver = document.getElementById('btnVolver');
+                if (btnVolver) {
+                    btnVolver.addEventListener('click', () => {
+                        window.location.href = 'gestion_expedientes.html';
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error al cargar los datos del alumno:', error);
+            }
+        });
+    </script>
+</body>
+</html>
