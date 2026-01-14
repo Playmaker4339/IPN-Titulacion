@@ -11,14 +11,41 @@ const ADMIN_PASSWORD = 'admin123';
 // Permitir recibir JSON en el body
 app.use(express.json());
 
-const dbPath = path.join(__dirname, 'CesarBasedeDatos.db');
+// Ruta de la base de datos: se puede sobreescribir con la variable de entorno DB_PATH
+// Esto permite apuntar a un disco persistente en Render si lo configuras allí.
+const dbPath = process.env.DB_PATH || path.join(__dirname, 'CesarBasedeDatos.db');
 
-const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+// Abrimos la BD en modo lectura/escritura y la creamos si no existe
+const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
   if (err) {
     console.error('Error abriendo la base de datos SQLite:', err.message);
     process.exit(1);
   }
   console.log('Conectado a la base de datos SQLite:', dbPath);
+
+  // Aseguramos que exista la tabla "solicitudes" (útil en Render cuando la BD empieza vacía)
+  db.run(
+    `CREATE TABLE IF NOT EXISTS solicitudes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      boleta TEXT NOT NULL UNIQUE,
+      apellidoPat TEXT NOT NULL,
+      apellidoMat TEXT NOT NULL,
+      nombre TEXT NOT NULL,
+      carrera TEXT,
+      generacion TEXT,
+      modalidad TEXT,
+      grupo TEXT,
+      correo TEXT,
+      telefono TEXT
+    )`,
+    (tableErr) => {
+      if (tableErr) {
+        console.error('Error asegurando tabla solicitudes:', tableErr.message);
+      } else {
+        console.log('Tabla solicitudes lista (creada o ya existente).');
+      }
+    }
+  );
 });
 
 // Servir archivos estáticos (HTML, CSS, JS)
@@ -185,7 +212,7 @@ app.get('/api/alumnos/:boleta', (req, res) => {
 
 // API: actualizar datos de un alumno por boleta
 app.put('/api/alumnos/:boleta', (req, res) => {
-  const { boleta } = req.params; // boleta original
+  const { boleta } = req.params;
 
   const {
     boleta: nuevaBoleta,
