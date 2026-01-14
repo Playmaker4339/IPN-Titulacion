@@ -101,8 +101,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 async function enviarDatosABaseDeDatos(datos) {
+    // En desarrollo usa localhost:3000, en producción usa el mismo origen (Render)
+    const baseUrl = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'
+        : '';
+
     try {
-        const respuesta = await fetch('http://localhost:3000/guardar-solicitud', {
+        const respuesta = await fetch(`${baseUrl}/guardar-solicitud`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
