@@ -6,6 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputApellidoPat = document.getElementById('apellidoPat');
     const inputApellidoMat = document.getElementById('apellidoMat');
     const inputNombre = document.getElementById('nombre');
+    const inputBoleta = document.getElementById('boleta');
+    const inputTelefono = document.getElementById('telefono');
+    const inputGrupo = document.getElementById('grupo');
+    const inputCorreo = document.getElementById('correo');
 
     function toTitleCase(text) {
         if (!text) return '';
@@ -28,6 +32,69 @@ document.addEventListener('DOMContentLoaded', function() {
     attachTitleCaseHandler(inputApellidoMat);
     attachTitleCaseHandler(inputNombre);
 
+    // Permitir solo letras (y espacios) en campos de nombre y apellidos
+    function allowOnlyLetters(input) {
+        if (!input) return;
+        input.addEventListener('input', () => {
+            const soloLetras = input.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]/g, '');
+            // Aplica mayúscula inicial a cada palabra mientras escribe
+            const formateado = toTitleCase(soloLetras);
+            if (formateado !== input.value) {
+                input.value = formateado;
+            }
+        });
+    }
+
+    allowOnlyLetters(inputApellidoPat);
+    allowOnlyLetters(inputApellidoMat);
+    allowOnlyLetters(inputNombre);
+
+    // Permitir solo números y máximo 10 caracteres en el campo boleta
+    if (inputBoleta) {
+        inputBoleta.addEventListener('input', () => {
+            let soloDigitos = inputBoleta.value.replace(/\D/g, '');
+            if (soloDigitos.length > 10) {
+                soloDigitos = soloDigitos.slice(0, 10);
+            }
+            if (soloDigitos !== inputBoleta.value) {
+                inputBoleta.value = soloDigitos;
+            }
+        });
+    }
+
+    // Permitir solo números en el campo teléfono
+    if (inputTelefono) {
+        inputTelefono.addEventListener('input', () => {
+            const soloDigitos = inputTelefono.value.replace(/\D/g, '');
+            if (soloDigitos !== inputTelefono.value) {
+                inputTelefono.value = soloDigitos;
+            }
+        });
+    }
+
+    // Permitir solo letras y números en el campo grupo y convertir a mayúsculas
+    if (inputGrupo) {
+        inputGrupo.addEventListener('input', () => {
+            // Quitar todo lo que no sea letra o número
+            const soloAlfanumerico = inputGrupo.value.replace(/[^a-zA-Z0-9]/g, '');
+            const enMayusculas = soloAlfanumerico.toUpperCase();
+            if (enMayusculas !== inputGrupo.value) {
+                inputGrupo.value = enMayusculas;
+            }
+        });
+    }
+
+    // Normalizar correo: solo alfanuméricos, @ y puntos, todo en minúsculas
+    if (inputCorreo) {
+        inputCorreo.addEventListener('input', () => {
+            const soloPermitidos = inputCorreo.value.replace(/[^a-zA-Z0-9@.]/g, '');
+            const enMinusculas = soloPermitidos.toLowerCase();
+            if (enMinusculas !== inputCorreo.value) {
+                inputCorreo.value = enMinusculas;
+            }
+        });
+    }
+
     btnGenerar.addEventListener('click', function() {
         const apellidoPat = document.getElementById('apellidoPat').value;
         const apellidoMat = document.getElementById('apellidoMat').value;
@@ -39,6 +106,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const grupo = document.getElementById('grupo').value;
         const correo = document.getElementById('correo').value;
         const telefono = document.getElementById('telefono').value;
+
+        // Validar longitud exacta de boleta
+        if (boleta.length !== 10) {
+            alert('El número de boleta debe tener exactamente 10 dígitos.');
+            return;
+        }
 
         // Obtener fecha actual del sistema en formato dd/mm/aaaa
         const hoy = new Date();
