@@ -58,6 +58,16 @@
                 const generacion = document.getElementById('generacion').value;
                 const boleta = document.getElementById('boleta').value;
 
+                // Obtener fecha actual (día, mes en letras, año)
+                const fecha = new Date();
+                const dia = String(fecha.getDate()).padStart(2, '0');
+                const nombresMes = [
+                    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+                ];
+                const mes = nombresMes[fecha.getMonth()];
+                const anio = String(fecha.getFullYear()).slice(-2); // Solo últimos 2 dígitos
+
                 const canvas = document.getElementById('canvasImagen');
                 const ctx = canvas.getContext('2d');
                 const img = new Image();
@@ -71,6 +81,12 @@
                     ctx.fillText(nombre, 395, 516);
                     ctx.fillText(boleta, 330, 543);
                     ctx.fillText(generacion, 718, 543);
+
+                    // Dibujar día, mes y año en coordenadas independientes
+                    // Ajusta manualmente estas coordenadas según necesites
+                    ctx.fillText(dia, 738, 467);   // Día
+                    ctx.fillText(mes, 820, 467);  // Mes
+                    ctx.fillText(anio, 1026, 468); // Año
 
                     // Generar y descargar PDF usando jsPDF
                     if (!window.jspdf || !window.jspdf.jsPDF) {
