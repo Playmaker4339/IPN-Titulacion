@@ -41,9 +41,9 @@
                     <div class="mb-3">
                         <label for="carrera" class="form-label">Selecciona tu carrera correspondiente</label>
                         <select class="form-select" id="carrera">
-                            <option value="0">Técnico en construcción</option>
-                            <option value="1">Técnico en alimentos</option>
-                            <option value="2">Técnico en aeronáutica</option>
+                            <option value="0">Técnico en Construcción</option>
+                            <option value="1">Técnico en Alimentos</option>
+                            <option value="2">Técnico en Aeronáutica</option>
                             </select>
                     </div>
 
@@ -62,6 +62,7 @@
                             <select class="form-select" id="modalidad">
                                 <option value="0">Curricular</option>
                                 <option value="1">Escolaridad</option>
+                                <option value="2">Licenciatura</option>
                             </select>
                         </div>
                     <div class="mb-3">
@@ -76,15 +77,11 @@
                         <label for="telefono" class="form-label">Ingresa tu número de teléfono</label>
                         <input type="tel" class="form-control" id="telefono" placeholder="Número de Teléfono">
                     </div>
-                        <!--Espacio para rotobotón de la modalidad de titulación-->
                     </form>
                     <div class="text-center">
                         <button type="button" id="btnGenerarImagen" class="btn btn-primary w-auto mb-4">Generar PDF</button>
                     </div>
                     <canvas id="canvasImagen" style="display:none"></canvas>
-
-                    <!-- NUEVA SECCIÓN: listado estático de solicitudes -->
-                    
                     </div>
                 </div>
             </div>
@@ -110,42 +107,5 @@
             }
         });
     </script>
-
-    <!-- Quitamos este bloque para no duplicar la inserción -->
-    <!--
-    <script>
-    document.getElementById('btnGenerarImagen').addEventListener('click', async () => {
-        const payload = {
-            apellidoPat: document.getElementById('apellidoPat').value,
-            apellidoMat: document.getElementById('apellidoMat').value,
-            nombre:      document.getElementById('nombre').value,
-            boleta:      document.getElementById('boleta').value,
-            carrera:     document.getElementById('carrera').value,
-            generacion:  document.getElementById('generacion').value,
-            modalidad:   document.getElementById('modalidad').value,
-            grupo:       document.getElementById('grupo').value,
-            correo:      document.getElementById('correo').value,
-            telefono:    document.getElementById('telefono').value
-        };
-
-        try {
-            const res = await fetch('/guardar-solicitud', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!res.ok) {
-                console.error('Error guardando en la base de datos', res.status, res.statusText);
-            } else {
-                const data = await res.json();
-                console.log('Solicitud guardada:', data);
-            }
-        } catch (err) {
-            console.error('Error de red al guardar en la base de datos', err);
-        }
-    });
-    </script>
-    -->
 </body>
 </html>

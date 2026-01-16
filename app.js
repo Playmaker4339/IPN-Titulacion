@@ -40,6 +40,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const correo = document.getElementById('correo').value;
         const telefono = document.getElementById('telefono').value;
 
+        // Obtener fecha actual del sistema en formato dd/mm/aaaa
+        const hoy = new Date();
+        const dia = String(hoy.getDate()).padStart(2, '0');
+        const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+        const anio = hoy.getFullYear();
+        const fechaSolicitud = `${dia}/${mes}/${anio}`;
+
         // Enviar datos al servidor para guardarlos en la base de datos
         enviarDatosABaseDeDatos({
             apellidoPat,
@@ -64,22 +71,30 @@ document.addEventListener('DOMContentLoaded', function() {
             ctx.drawImage(img, 0, 0);
             ctx.font = '20px Arial';
             ctx.fillStyle = 'black';
-            ctx.fillText(apellidoPat, 165, 670);
-            ctx.fillText(apellidoMat, 520, 670);
-            ctx.fillText(nombre, 870, 670);
+            ctx.fillText(apellidoPat, 190, 670);
+            ctx.fillText(apellidoMat, 540, 670);
+            ctx.fillText(nombre, 910, 670);
             ctx.fillText(generacion, 970, 738);
             ctx.fillText(boleta, 533, 738);
             ctx.fillText(carrera, 140, 738);
-            ctx.fillText(grupo, 618, 809);
-            ctx.fillText(correo, 885, 809);
-            ctx.fillText(telefono, 240, 809);
+            ctx.fillText(grupo, 618, 805);
+            ctx.fillText(correo, 900, 805);
+            ctx.fillText(telefono, 239, 805);
+
+            // Imprimir fecha de solicitud en el PDF (ajusta las coordenadas según tu formato)
+            ctx.fillText(fechaSolicitud, 913, 308);
 
             if (modalidad === 'Curricular') {
                 ctx.font = 'bold 24px Arial';
-                ctx.fillText('x', 662, 530); // Coordenadas para "Curricular"
+                ctx.fillText('x', 1183, 902); // Primera X para "Curricular"
+                ctx.fillText('x', 663, 526); // Segunda X para "Curricular"
             } else if (modalidad === 'Escolaridad') {
                 ctx.font = 'bold 24px Arial';
-                ctx.fillText('x', 662, 498); // Coordenadas para "Escolaridad"
+                ctx.fillText('x', 663, 494); // Coordenadas para "Escolaridad"
+            } else if (modalidad === 'Licenciatura') {
+                ctx.font = 'bold 24px Arial';
+                ctx.fillText('x', 183, 591); // Primera X para "Licenciatura"
+                ctx.fillText('x', 1183, 970); // Segunda X para "Licenciatura"
             }
 
             // Generar y descargar PDF usando jsPDF
